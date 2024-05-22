@@ -15,5 +15,3 @@ export type Product = {
   }[];
   inventory: ProductInventory;
 };
-
-// interface=> model/schema => validation => service => controller => route

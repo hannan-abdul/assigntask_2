@@ -22,7 +22,7 @@ const productValidationSchema = z.object({
   price: z.number().min(0),
   category: z.string().nonempty(),
   tags: z.array(z.string()).min(1),
-  variants: z.array(variantValidationSchema), // Assuming variants are optional
+  variants: z.array(variantValidationSchema),
   inventory: inventoryValidationSchema,
 });
 
