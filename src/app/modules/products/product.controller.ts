@@ -5,9 +5,9 @@ import productValidationSchema from './product.validation';
 const createProduct = async (req: Request, res: Response) => {
   try {
     const { product } = req.body;
-
     const zodParseData = productValidationSchema.parse(product);
     const result = await ProductServices.createProductIntoDB(zodParseData);
+
     res.status(200).json({
       success: true,
       message: 'Product created successfully',
@@ -98,9 +98,48 @@ const deleteProduct = async (req: Request, res: Response) => {
     });
   }
 };
+
+const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const { updatedData } = req.body;
+
+    if (!updatedData || Object.keys(updatedData).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No data provided for update',
+      });
+    }
+
+    const result = await ProductServices.updateProductFromDB(
+      productId,
+      updatedData,
+    );
+    console.log(result);
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found',
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'Product updated successfully',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    });
+  }
+};
 export const ProductController = {
   createProduct,
   getAllProducts,
   getSingleProduct,
   deleteProduct,
+  updateProduct,
 };

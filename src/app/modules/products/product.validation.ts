@@ -17,10 +17,10 @@ const variantValidationSchema = z.object({
 
 // Define Zod schema for product
 const productValidationSchema = z.object({
-  name: z.string().nonempty(),
-  description: z.string().nonempty(),
-  price: z.number().min(0),
-  category: z.string().nonempty(),
+  name: z.string().nonempty('Name is required'),
+  description: z.string().nonempty('Description is required'),
+  price: z.number().min(0, 'Price must be a positive number'),
+  category: z.string().nonempty('Category is required'),
   tags: z.array(z.string()).min(1),
   variants: z.array(variantValidationSchema),
   inventory: inventoryValidationSchema,
