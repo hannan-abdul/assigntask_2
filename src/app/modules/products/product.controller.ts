@@ -13,6 +13,7 @@ const createProduct = async (req: Request, res: Response) => {
       message: 'Product created successfully',
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -31,6 +32,7 @@ const getAllProducts = async (req: Request, res: Response) => {
       message: 'Products fetched successfully',
       date: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -55,6 +57,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
       message: 'single product retrieved successfully',
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -82,6 +85,7 @@ const deleteProduct = async (req: Request, res: Response) => {
           message: 'Product deleted successfully',
           data: null,
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         res.status(500).json({
           success: false,
@@ -90,6 +94,7 @@ const deleteProduct = async (req: Request, res: Response) => {
         });
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -128,6 +133,7 @@ const updateProduct = async (req: Request, res: Response) => {
       message: 'Product updated successfully',
       data: result,
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
