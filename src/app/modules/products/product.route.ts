@@ -10,3 +10,4 @@ router.patch('/:productId', ProductController.updateProduct);
 router.delete('/:productId', ProductController.deleteProduct);
 router.get('/search', ProductController.searchProducts);
 export const ProductRoutes = router;
+console.log();
