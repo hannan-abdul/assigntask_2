@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { ProductServices } from './product.service';
-import productValidationSchema from './product.validation';
+import { productValidation } from './product.validation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
     const { product } = req.body;
-    const zodParseData = productValidationSchema.parse(product);
+    const zodParseData =
+      productValidation.createProductValidationSchema.parse(product);
     const result = await ProductServices.createProductIntoDB(zodParseData);
 
     res.status(200).json({
@@ -104,7 +105,9 @@ const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const { product } = req.body;
-    if (!product) {
+    const zodParseData =
+      productValidation.updateProductValidationSchema.parse(product);
+    if (!zodParseData) {
       return res.status(400).json({
         success: false,
         message: 'Product data is required',
@@ -112,7 +115,7 @@ const updateProduct = async (req: Request, res: Response) => {
     }
     const result = await ProductServices.updateProductFromDB(
       productId,
-      product,
+      zodParseData,
     );
 
     if (!result) {

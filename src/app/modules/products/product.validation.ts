@@ -16,7 +16,7 @@ const variantValidationSchema = z.object({
 });
 
 // Define Zod schema for product
-const productValidationSchema = z.object({
+const createProductValidationSchema = z.object({
   name: z.string().nonempty('Name is required'),
   description: z.string().nonempty('Description is required'),
   price: z.number().min(0, 'Price must be a positive number'),
@@ -25,5 +25,17 @@ const productValidationSchema = z.object({
   variants: z.array(variantValidationSchema),
   inventory: inventoryValidationSchema,
 });
+const updateProductValidationSchema = z.object({
+  name: z.string().nonempty('Name is required').optional(),
+  description: z.string().nonempty('Description is required').optional(),
+  price: z.number().min(0, 'Price must be a positive number').optional(),
+  category: z.string().nonempty('Category is required').optional(),
+  tags: z.array(z.string()).min(1).optional(),
+  variants: z.array(variantValidationSchema).optional(),
+  inventory: inventoryValidationSchema.optional(),
+});
 
-export default productValidationSchema;
+export const productValidation = {
+  createProductValidationSchema,
+  updateProductValidationSchema,
+};
