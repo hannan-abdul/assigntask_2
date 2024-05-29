@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { ProductServices } from './product.service';
 import productValidationSchema from './product.validation';
@@ -13,7 +14,6 @@ const createProduct = async (req: Request, res: Response) => {
       message: 'Product created successfully',
       data: result,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -26,13 +26,11 @@ const createProduct = async (req: Request, res: Response) => {
 const getAllProducts = async (req: Request, res: Response) => {
   try {
     const result = await ProductServices.getAllProductsFromDB();
-
     res.status(200).json({
       success: true,
       message: 'Products fetched successfully',
       date: result,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -46,6 +44,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.getSingleProductFromDB(productId);
+
     if (!result) {
       return res.status(404).json({
         success: false,
@@ -57,7 +56,6 @@ const getSingleProduct = async (req: Request, res: Response) => {
       message: 'single product retrieved successfully',
       data: result,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -85,7 +83,6 @@ const deleteProduct = async (req: Request, res: Response) => {
           message: 'Product deleted successfully',
           data: null,
         });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         res.status(500).json({
           success: false,
@@ -94,7 +91,6 @@ const deleteProduct = async (req: Request, res: Response) => {
         });
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -107,20 +103,17 @@ const deleteProduct = async (req: Request, res: Response) => {
 const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const { updatedData } = req.body;
-
-    if (!updatedData || Object.keys(updatedData).length === 0) {
+    const { product } = req.body;
+    if (!product) {
       return res.status(400).json({
         success: false,
-        message: 'No data provided for update',
+        message: 'Product data is required',
       });
     }
-
     const result = await ProductServices.updateProductFromDB(
       productId,
-      updatedData,
+      product,
     );
-    console.log(result);
 
     if (!result) {
       return res.status(404).json({
@@ -133,11 +126,33 @@ const updateProduct = async (req: Request, res: Response) => {
       message: 'Product updated successfully',
       data: result,
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     res.status(500).json({
       success: false,
       message: err.message || 'something went wrong',
+      error: err,
+    });
+  }
+};
+const searchProducts = async (req: Request, res: Response) => {
+  try {
+    const { query } = req.query;
+    if (!query) {
+      return res.status(400).json({
+        success: false,
+        message: 'Query parameter is required',
+      });
+    }
+    const result = await ProductServices.searchProductsInDB(query as string);
+    res.status(200).json({
+      success: true,
+      message: 'Products fetched successfully',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Something went wrong',
       error: err,
     });
   }
@@ -148,4 +163,5 @@ export const ProductController = {
   getSingleProduct,
   deleteProduct,
   updateProduct,
+  searchProducts,
 };
