@@ -5,7 +5,7 @@ import { productValidation } from './product.validation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const { product } = req.body;
+    const product = req.body;
     const zodParseData =
       productValidation.createProductValidationSchema.parse(product);
     const result = await ProductServices.createProductIntoDB(zodParseData);
@@ -104,7 +104,7 @@ const deleteProduct = async (req: Request, res: Response) => {
 const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const { product } = req.body;
+    const product = req.body;
     const zodParseData =
       productValidation.updateProductValidationSchema.parse(product);
     if (!zodParseData) {
