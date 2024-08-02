@@ -18,7 +18,7 @@ const createProduct = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.merrage || 'Something went wrong',
+      message: err.message || 'Something went wrong',
       error: err,
     });
   }
@@ -26,17 +26,20 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const result = await ProductServices.getAllProductsFromDB();
+    const { searchTerm } = req.query;
+    const result = await ProductServices.getAllProductsFromDB(
+      searchTerm as string,
+    );
     res.status(200).json({
       success: true,
       message: 'Products fetched successfully',
-      date: result,
+      data: result,
     });
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.merrage || 'Something went wrong',
-      err,
+      message: err.message || 'Something went wrong',
+      error: err,
     });
   }
 };
@@ -105,9 +108,7 @@ const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const product = req.body;
-    const zodParseData =
-      productValidation.updateProductValidationSchema.parse(product);
-    if (!zodParseData) {
+    if (!product) {
       return res.status(400).json({
         success: false,
         message: 'Product data is required',
@@ -115,7 +116,7 @@ const updateProduct = async (req: Request, res: Response) => {
     }
     const result = await ProductServices.updateProductFromDB(
       productId,
-      zodParseData,
+      product,
     );
 
     if (!result) {
@@ -137,34 +138,11 @@ const updateProduct = async (req: Request, res: Response) => {
     });
   }
 };
-const searchProducts = async (req: Request, res: Response) => {
-  try {
-    const { query } = req.query;
-    if (!query) {
-      return res.status(400).json({
-        success: false,
-        message: 'Query parameter is required',
-      });
-    }
-    const result = await ProductServices.searchProductsInDB(query as string);
-    res.status(200).json({
-      success: true,
-      message: 'Products fetched successfully',
-      data: result,
-    });
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: err.message || 'Something went wrong',
-      error: err,
-    });
-  }
-};
+
 export const ProductController = {
   createProduct,
   getAllProducts,
   getSingleProduct,
   deleteProduct,
   updateProduct,
-  searchProducts,
 };
