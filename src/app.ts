@@ -15,7 +15,7 @@ app.use('/api/products', ProductRoutes);
 app.use('/api/orders', OrderRoutes);
 
 const getAController = (req: Request, res: Response) => {
-  res.send('Order management app');
+  res.send('Order management application');
 };
 
 app.get('/', getAController);
