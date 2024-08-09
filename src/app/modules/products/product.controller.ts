@@ -30,6 +30,9 @@ const getAllProducts = async (req: Request, res: Response) => {
     const result = await ProductServices.getAllProductsFromDB(
       searchTerm as string,
     );
+    if (!result || result.length === 0) {
+      throw new Error('Product not found');
+    }
     res.status(200).json({
       success: true,
       message: 'Products fetched successfully',
@@ -52,7 +55,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
     if (!result) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found',
+        message: 'Single product not found',
       });
     }
     res.status(200).json({
